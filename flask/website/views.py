@@ -15,6 +15,10 @@ def help():
 def about():
     return render_template("about.html", var="value")
 
+@views.route("/pipeline")
+def about():
+    return render_template("pipeline.html", val=1)
+
 
 '''player stats route'''
 @views.route("/player-stats")
