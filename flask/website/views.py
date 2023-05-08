@@ -16,7 +16,7 @@ def about():
     return render_template("about.html", var="value")
 
 @views.route("/pipeline")
-def about():
+def pipeline():
     return render_template("pipeline.html", val=1)
 
 
