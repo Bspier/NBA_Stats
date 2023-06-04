@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, current_app, json
+
 
 views = Blueprint("views", __name__)
 
@@ -25,9 +26,11 @@ def pipeline():
 def player_stats():
     return render_template("player_stats.html", var="value")
 
+
 @views.route("/player-name")
 def player_name():
-    return render_template("player_name.html", var="value")
+    data = current_app.config["DATA"]
+    return render_template("player_name.html", data=json.dumps(data))
 
 @views.route("/player-random")
 def player_random():

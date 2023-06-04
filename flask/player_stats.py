@@ -1,20 +1,13 @@
 import json
 
-with open('flask/nba_stats_data.json') as f:
-    data = json.load(f)
 
-player_name = 'Joel Embiid'
-temp_data = None
+def load_data(season, season_type):
+    with open('nba_stats_data.json') as f:
+        data = json.load(f)
 
-for player_data in data['data']:
-    if player_data['PLAYER'] == player_name:
-        if player_data['Season_type'] == "Regular%20Season":
-            player_data['Season_type'] = "Regular Season"
-        temp_data = player_data
-        break
+    season_data = data.get('data', {}).get(season, {})
+    season_type_data = season_data.get(season_type, {})
+    
+    return season_type_data
 
-temp_data.pop('index')
-temp_data.pop('TEAM_ID')
-temp_data.pop('EFF')
-temp_data.pop('PLAYER_ID')
-print(temp_data)
+def get_data_year(data, year):

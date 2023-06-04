@@ -1,10 +1,102 @@
 {% extends "base.html" %}
 
 {% block title %}
-Home
-{% endblock%}
+Player Stats
+{% endblock %}
 
 {% block content %}
-<h1>search by player name</h1>
-<a href="/player-stats">back</a>
-{% endblock%}
+<body>
+    <h1>Search by player name</h1>
+    <select id="year" onchange="updateData()">
+        <option>2022-23</option>
+        <option>2021-22</option>
+        <option>2020-21</option>
+        <option>2019-20</option>
+        <option>2018-19</option>
+    </select>
+    <select id="season_type" onchange="updateData()">
+        <option>Regular%20Season</option>
+        <option>Playoffs</option>
+    </select>
+    <select id="team" onchange="updatePlayers()"></select>
+    <select id="player" onchange="updatePlayerData()"></select>
+    <pre id="player_data"></pre>
+
+    <script>
+        async function updateData() {
+            const year = document.getElementById('year').value;
+            const seasonType = document.getElementById('season_type').value;
+            
+            try {
+                const teamResponse = await fetch(`/api/teams/${year}/${seasonType}`);
+                if (!teamResponse.ok) {
+                    throw new Error(`HTTP error! status: ${teamResponse.status}`);
+                } else {
+                    const teams = await teamResponse.json();
+
+                    const teamSelect = document.getElementById('team');
+                    teamSelect.innerHTML = '';
+                    teams.forEach(team => {
+                        const option = document.createElement('option');
+                        option.text = team;
+                        teamSelect.add(option);
+                    });
+                }
+            } catch(e) {
+                console.log('Error: ', e);
+            }
+
+            updatePlayers();
+        }
+
+        async function updatePlayers() {
+            const year = document.getElementById('year').value;
+            const seasonType = document.getElementById('season_type').value;
+            const team = document.getElementById('team').value;
+            
+            try {
+                const playerResponse = await fetch(`/api/players/${year}/${seasonType}/${team}`);
+                if (!playerResponse.ok) {
+                    throw new Error(`HTTP error! status: ${playerResponse.status}`);
+                } else {
+                    const players = await playerResponse.json();
+
+                    const playerSelect = document.getElementById('player');
+                    playerSelect.innerHTML = '';
+                    players.forEach(player => {
+                        const option = document.createElement('option');
+                        option.text = player;
+                        playerSelect.add(option);
+                    });
+                }
+            } catch(e) {
+                console.log('Error: ', e);
+            }
+
+            updatePlayerData();
+        }
+
+        async function updatePlayerData() {
+            const year = document.getElementById('year').value;
+            const seasonType = document.getElementById('season_type').value;
+            const team = document.getElementById('team').value;
+            const player = document.getElementById('player').value;
+            
+            try {
+                const playerDataResponse = await fetch(`/api/player_data/${year}/${seasonType}/${team}/${player}`);
+                if (!playerDataResponse.ok) {
+                    throw new Error(`HTTP error! status: ${playerDataResponse.status}`);
+                } else {
+                    const playerData = await playerDataResponse.json();
+                    document.getElementById('player_data').textContent = JSON.stringify(playerData, null, 2);
+                }
+            } catch(e) {
+                console.log('Error: ', e);
+            }
+        }
+
+        // Initialize data
+        updateData();
+    </script>
+</body>
+{% endblock %}
