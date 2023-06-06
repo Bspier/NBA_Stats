@@ -15,7 +15,7 @@ data = {
 }
 
 season_type = ['Playoffs', 'Regular Season']
-seasons = ['2018-19', '2019-20', '2020-21', '2021-22', '2022-23']
+seasons = ['2018-19']
 
 for year in seasons:
     data["data"][year] = {}
