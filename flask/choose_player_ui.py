@@ -54,28 +54,30 @@ def choose_team():
         print(f"{i+1}. {team}")
     team_index = int(input("Your choice: ")) - 1
     team_choice = list(team_dict.keys())[team_index]
-
-    return season_choice, season_type_choice, team_choice
-
+    print(season_choice, season_type_choice, team_choice)
 
 def load_team(season, season_type, team):
     with open('nba_stats_data.json') as f:
         data = json.load(f)
+    
+    #print("load_data",season)
 
     season_data = data.get("data", {}).get(season, {})
     season_type_data = season_data.get(season_type, {})
     team_data = season_type_data.get(team, {})
 
     return team_data
+    
+    #print(player_names)
 
-
-def choose_player(team_data):
+def choose_player():
+    team_data = load_team('2018-19', 'Playoffs', 'GSW')
     player_names = [player['PLAYER'] for player in team_data]
 
     """Print players name for user to choose"""
-    print("Choose a player: ")
+    print("Choose a playeer: ")
     for i, name in enumerate(player_names, 1):
-        print(f"{i}. {name}")
+        print(f"{i}, {name}")
 
     """ask user to choose player"""
     player_choice = player_names[int(input("Your choice: ")) - 1]
@@ -88,11 +90,10 @@ def choose_player(team_data):
             print(f"{stat}: {value}")
 
 
-def main():
-    season, season_type, team = choose_team()
-    team_data = load_team(season, season_type, team)
-    choose_player(team_data)
+
+    print(player_names)
+
+choose_player()
 
 
-if __name__ == "__main__":
-    main()
+

@@ -2,11 +2,11 @@ import zmq
 
 context = zmq.Context()
 
-socket_data = context.socket(zmq.REP)
-socket_data.bind('tcp://*:9755')
+socket_team_opt = context.socket(zmq.REP)
+socket_team_opt.bind('tcp://*:9755')
 
 seasons = ['2018-19', '2019-20', '2020-21', '2021-22', '2022-23']
-season_types = ['Playoffs', 'Regular Season']
+season_types = ['Regular Season']
 team_dict = {
     "ATL": "Atlanta Hawks",
     "BOS": "Boston Celtics",
@@ -47,15 +47,16 @@ data = {'seasons':  seasons,
 
 try:
     while True:
-        recieved = socket_data.recv_string()
+        recieved = socket_team_opt.recv_string()
         if recieved == 'Retrieve data':
             print("request:", recieved)
 
-            socket_data.send_pyobj(data)
+            socket_team_opt.send_pyobj(data)
+        elif recieved == "Close":
             break
 
 finally:
-    socket_data.close()
+    socket_team_opt.close()
     context.term()
-    print(socket_data)
+    print(socket_team_opt)
     print("done")
